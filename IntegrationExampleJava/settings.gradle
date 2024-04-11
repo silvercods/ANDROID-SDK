@@ -1,0 +1,2 @@
+include ':sapihost'
+include ':app', ':sapihost'
