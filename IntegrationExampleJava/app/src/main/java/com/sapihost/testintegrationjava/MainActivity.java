@@ -1,12 +1,12 @@
-package com.sapihost.testintegrationjava;
+package com.Sapihost.testintegrationjava;
 
 import android.content.Intent;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.sapihost.sdk.*;
-import com.sapihost.sdk.threeDSecure.*;
+import com.Sapihost.sdk.*;
+import com.Sapihost.sdk.threeDSecure.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Create payment info with product information
-        sapihostPaymentInfo paymentInfo = getPaymentInfoOnlyRequiredParams(); // getPaymentInfoAllParams
+        SapihostPaymentInfo paymentInfo = getPaymentInfoOnlyRequiredParams(); // getPaymentInfoAllParams
 
         // Signature should be generated on your server and delivered to your app
         String signature = SignatureGenerator.generateSignature(paymentInfo.getParamsForSignature(), SECRET);
@@ -29,12 +29,12 @@ public class MainActivity extends AppCompatActivity {
         paymentInfo.setSignature(signature);
 
         // Set theme
-//        sapihostTheme theme = sapihostTheme.getDarkTheme();
+//        SapihostTheme theme = SapihostTheme.getDarkTheme();
 //        theme.fullScreenBackgroundColor = Color.GREEN;
 //        theme.showShadow = false;
 
         // Present Checkout UI
-        startActivityForResult(sapihostActivity.buildIntent(this,
+        startActivityForResult(SapihostActivity.buildIntent(this,
                 paymentInfo
 //                ,theme
                 ),
@@ -48,26 +48,26 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == PAY_ACTIVITY_REQUEST) {
 
             switch (resultCode) {
-                case sapihostActivity.RESULT_SUCCESS:
-                case sapihostActivity.RESULT_CANCELLED:
-                case sapihostActivity.RESULT_DECLINE:
-                case sapihostActivity.RESULT_FAILED:
+                case SapihostActivity.RESULT_SUCCESS:
+                case SapihostActivity.RESULT_CANCELLED:
+                case SapihostActivity.RESULT_DECLINE:
+                case SapihostActivity.RESULT_FAILED:
                     break;
             }
 
-            if(data != null && data.hasExtra(sapihostActivity.DATA_INTENT_EXTRA_ERROR)) {
-                String error = data.getStringExtra(sapihostActivity.DATA_INTENT_EXTRA_ERROR);
+            if(data != null && data.hasExtra(SapihostActivity.DATA_INTENT_EXTRA_ERROR)) {
+                String error = data.getStringExtra(SapihostActivity.DATA_INTENT_EXTRA_ERROR);
             }
 
-            if(data != null && data.hasExtra(sapihostActivity.DATA_INTENT_EXTRA_TOKEN)) {
-                String token = data.getStringExtra(sapihostActivity.DATA_INTENT_EXTRA_TOKEN);
+            if(data != null && data.hasExtra(SapihostActivity.DATA_INTENT_EXTRA_TOKEN)) {
+                String token = data.getStringExtra(SapihostActivity.DATA_INTENT_EXTRA_TOKEN);
             }
         }
     }
 
     // Payment Info
-    sapihostPaymentInfo getPaymentInfoOnlyRequiredParams() {
-        return new sapihostPaymentInfo(
+    SapihostPaymentInfo getPaymentInfoOnlyRequiredParams() {
+        return new SapihostPaymentInfo(
                 PROJECT_ID, // project ID that is assigned to you
                 "internal_payment_id_1", // payment ID to identify payment in your system
                 1999, // 19.99
@@ -75,8 +75,8 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    sapihostPaymentInfo getPaymentInfoAllParams() {
-        return new sapihostPaymentInfo(
+    SapihostPaymentInfo getPaymentInfoAllParams() {
+        return new SapihostPaymentInfo(
                 PROJECT_ID, // project ID that is assigned to you
                 "internal_payment_id_1", // payment ID to identify payment in your system
                 1999, // 19.99
@@ -88,29 +88,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Additional
-    void setDMSPayment(sapihostPaymentInfo paymentInfo) {
-        paymentInfo.setAction(sapihostPaymentInfo.ActionType.Auth);
+    void setDMSPayment(SapihostPaymentInfo paymentInfo) {
+        paymentInfo.setAction(SapihostPaymentInfo.ActionType.Auth);
     }
 
-    void setActionTokenize(sapihostPaymentInfo paymentInfo) {
-        paymentInfo.setAction(sapihostPaymentInfo.ActionType.Tokenize);
+    void setActionTokenize(SapihostPaymentInfo paymentInfo) {
+        paymentInfo.setAction(SapihostPaymentInfo.ActionType.Tokenize);
     }
 
-    void setActionVerify(sapihostPaymentInfo paymentInfo) {
-        paymentInfo.setAction(sapihostPaymentInfo.ActionType.Verify);
+    void setActionVerify(SapihostPaymentInfo paymentInfo) {
+        paymentInfo.setAction(SapihostPaymentInfo.ActionType.Verify);
     }
 
-    void setToken(sapihostPaymentInfo paymentInfo) {
+    void setToken(SapihostPaymentInfo paymentInfo) {
         paymentInfo.setToken("token");
     }
 
-    void setReceiptData(sapihostPaymentInfo paymentInfo) {
+    void setReceiptData(SapihostPaymentInfo paymentInfo) {
         final String RECEIPT_DATA = "receipt data";
         paymentInfo.setReceiptData(RECEIPT_DATA);
     }
 
-    void setRecurrent(sapihostPaymentInfo paymentInfo) {
-        sapihostRecurrentInfo recurrentInfo = new sapihostRecurrentInfo(
+    void setRecurrent(SapihostPaymentInfo paymentInfo) {
+        SapihostRecurrentInfo recurrentInfo = new SapihostRecurrentInfo(
                 "R", // type
                 "20", // expiry day
                 "11", // expiry month
@@ -121,36 +121,36 @@ public class MainActivity extends AppCompatActivity {
                 "your_recurrent_id"); // recurrent payment ID
         // Additional options if needed
 //        recurrentInfo.setAmount(1000);
-//        recurrentInfo.setSchedule(new sapihostRecurrentInfoSchedule[]{
-//                new sapihostRecurrentInfoSchedule("20-10-2020",1000),
-//                new sapihostRecurrentInfoSchedule("20-10-2020",1000)
+//        recurrentInfo.setSchedule(new SapihostRecurrentInfoSchedule[]{
+//                new SapihostRecurrentInfoSchedule("20-10-2020",1000),
+//                new SapihostRecurrentInfoSchedule("20-10-2020",1000)
 //        });
 
         paymentInfo.setRecurrent(recurrentInfo);
     }
 
-    void setKnownAdditionalFields(sapihostPaymentInfo paymentInfo) {
-        paymentInfo.setsapihostAdditionalFields(new sapihostAdditionalField[]{
-                new sapihostAdditionalField(sapihostAdditionalFieldEnums.AdditionalFieldType.customer_first_name, "Mark"),
-                new sapihostAdditionalField(sapihostAdditionalFieldEnums.AdditionalFieldType.billing_country, "US"),
+    void setKnownAdditionalFields(SapihostPaymentInfo paymentInfo) {
+        paymentInfo.setSapihostAdditionalFields(new SapihostAdditionalField[]{
+                new SapihostAdditionalField(SapihostAdditionalFieldEnums.AdditionalFieldType.customer_first_name, "Mark"),
+                new SapihostAdditionalField(SapihostAdditionalFieldEnums.AdditionalFieldType.billing_country, "US"),
         });
     }
 
     // if you want to hide the saved cards, pass the value - true
-    void setHideSavedWallets(sapihostPaymentInfo paymentInfo) {
+    void setHideSavedWallets(SapihostPaymentInfo paymentInfo) {
         paymentInfo.setHideSavedWallets(false);
     }
 
     // For forced opening of the payment method, pass its code. Example: qiwi, card ...
-    void setForcePaymentMethod(sapihostPaymentInfo paymentInfo) {
+    void setForcePaymentMethod(SapihostPaymentInfo paymentInfo) {
         paymentInfo.setForcePaymentMethod("card");
     }
 
     // Setup 3D Secure 2.0 parameters
-    void setThreeDSecureParams(sapihostPaymentInfo paymentInfo) {
-        sapihostThreeDSecureInfo threeDSecureInfo = new sapihostThreeDSecureInfo();
+    void setThreeDSecureParams(SapihostPaymentInfo paymentInfo) {
+        SapihostThreeDSecureInfo threeDSecureInfo = new SapihostThreeDSecureInfo();
 
-        sapihostThreeDSecurePaymentInfo threeDSecurePaymentInfo = new sapihostThreeDSecurePaymentInfo();
+        SapihostThreeDSecurePaymentInfo threeDSecurePaymentInfo = new SapihostThreeDSecurePaymentInfo();
         threeDSecurePaymentInfo
                 .setReorder("01") // This parameter indicates whether the cardholder is reordering previously purchased merchandise.
                 .setPreorderPurchase("01") // This parameter indicates whether cardholder is placing an order for merchandise with a future availability or release date.
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                 .setChallengeIndicator("01") // This parameter indicates whether challenge flow is requested for this payment.
                 .setChallengeWindow("01"); // The dimensions of a window in which authentication page opens.
 
-        sapihostThreeDSecureGiftCardInfo threeDSecureGiftCardInfo = new sapihostThreeDSecureGiftCardInfo();
+        SapihostThreeDSecureGiftCardInfo threeDSecureGiftCardInfo = new SapihostThreeDSecureGiftCardInfo();
 
         threeDSecureGiftCardInfo
                 .setAmount(12345) // Amount of payment with prepaid or gift card denominated in minor currency units.
@@ -167,14 +167,14 @@ public class MainActivity extends AppCompatActivity {
 
         threeDSecurePaymentInfo.setGiftCard(threeDSecureGiftCardInfo);
 
-        sapihostThreeDSecureCustomerInfo threeDSecureCustomerInfo = new sapihostThreeDSecureCustomerInfo();
+        SapihostThreeDSecureCustomerInfo threeDSecureCustomerInfo = new SapihostThreeDSecureCustomerInfo();
         threeDSecureCustomerInfo
                 .setAddressMatch("Y") //The parameter indicates whether the customer billing address matches the address specified in the shipping object.
                 .setHomePhone("79105211111") // Customer home phone number.
                 .setWorkPhone("73141211111") // Customer work phone number.
                 .setBillingRegionCode("ABC"); // State, province, or region code in the ISO 3166-2 format. Example: SPE for Saint Petersburg, Russia.
 
-        sapihostThreeDSecureAccountInfo threeDSecureAccountInfo = new sapihostThreeDSecureAccountInfo();
+        SapihostThreeDSecureAccountInfo threeDSecureAccountInfo = new SapihostThreeDSecureAccountInfo();
 
         threeDSecureAccountInfo
                 .setActivityDay(22) // Number of card payment attempts in the last 24 hours.
@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPaymentAge("01-10-2019") // Card record creation date.
                 .setPaymentAgeIndicator("01"); //  Number of days since the payment card details were saved in a customer account.
 
-        sapihostThreeDSecureShippingInfo threeDSecureShippingInfo = new sapihostThreeDSecureShippingInfo();
+        SapihostThreeDSecureShippingInfo threeDSecureShippingInfo = new SapihostThreeDSecureShippingInfo();
 
         threeDSecureShippingInfo
                 .setType("01") //Shipment indicator.
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
                 .setRegionCode("MOW") // State, province, or region code in the ISO 3166-2 format.
                 .setNameIndicator("01"); // Shipment recipient flag.
 
-        sapihostThreeDSecureMpiResultInfo threeDSecureMpiResultInfo = new sapihostThreeDSecureMpiResultInfo();
+        SapihostThreeDSecureMpiResultInfo threeDSecureMpiResultInfo = new SapihostThreeDSecureMpiResultInfo();
 
         threeDSecureMpiResultInfo
                 .setAcsOperationId("321412-324-sda23-2341-adf12341234") // The ID the issuer assigned to the previous customer operation and returned in the acs_operation_id parameter inside the callback with payment processing result. Maximum 30 characters.
@@ -226,6 +226,6 @@ public class MainActivity extends AppCompatActivity {
         threeDSecureInfo.setThreeDSecureCustomerInfo(threeDSecureCustomerInfo);
         threeDSecureInfo.setThreeDSecurePaymentInfo(threeDSecurePaymentInfo);
 
-        paymentInfo.setsapihostThreeDSecureInfo(threeDSecureInfo);
+        paymentInfo.setSapihostThreeDSecureInfo(threeDSecureInfo);
     }
 }
